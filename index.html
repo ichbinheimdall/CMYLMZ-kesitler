@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cem Yılmaz - Anılar</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'SF Pro Display', sans-serif;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            background-color: #1f1f1f;
+            padding: 10px 0;
+            z-index: 1;
+        }
+        .anecdote {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        .anecdote p {
+            margin-top: 0;
+        }
+        .writer {
+            text-align: center;
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cem Yılmaz - Anılar</h1>
+        <div id="anecdoteContainer"></div>
+        <div class="writer">- Cem Yılmaz</div>
+    </div>
+
+    <script>
+        var anecdotes = [
+            "Ben çocukken salaktım. Edip Akbayram'ın ismini Edi zannederdim. Yani, benim için 'Edi Pakbayram'di.",
+            "Ablama, 'Nasıl olup da koca bir günü canın sıkılmadan evde oturarak geçiriyorsun?' demiştim. 'Büyüyünce insanın canı sokakta oynamak istemez ki?' cevabını vermişti. Uzunca bir süre büyüyüp büyümediğimi anlamak için kendime, 'Canın sokakta oynamayı istiyor mu?' diye sormuştum.",
+            "Annem erkeğin cinsel organını 'pipi', kadınınkini 'kutu' olarak tanımlamıştı. O zamanlar TRT'de Cenk Koray'ın sunduğu 'Tele Kutu' diye bir yarışma vardı. Yarışmacılar, 'Hayır Cenk Bey. Ben kutumu açmak istiyorum' deyince koşarak odadan kaçardım.",
+            "Sabahları kalktığımda aklımın hala yerinde olup olmadığını anlamak için 2+2, 3+4 gibi toplama işlemleri yapardım. Sonuçlar doğru olunca da çok sevinirdim.",
+            "Dedemle parka gittiğimiz bir gün TRT'ciler çekim için oradaydı. Beni oynarken çektiler. Yayın günü bizim aile, jeneriğinde gözüktüğüm çocuk programını izlemek için televizyon başına geçti. Kendimi ekranda görünce, 'Beni niye parkta unuttunuuuuz?' diye gözyaşlarına boğulmuştum.",
+            "'Geri vites' kavramım yoktu. Şoför, kolunu koltuğa atıp arkaya doğru bakınca araba otomatikman geri geri gidiyor zannederdim.",
+            "Benden büyük kuzenlerim dondurmacıların dondurma külahlarının sivri kısmıyla kulaklarını karıştırdığını söylemişti. İnanmıştım. Hala da külahların sivri kısımlarını yemem, çöpe atarım.",
+            "Babaannem bir gün gelirse sevdiğim dizilerin olmadığı bir gün gelmesini istiyordum.",
+            "Abimle Karaoğlancılık oynardık. O Karaoğlan olurdu, beni de Bizans askeri yapardı. Sonra evire çevire döverdi. Çok mühim bir şey yaptığımı sandığım için canım yansa bile hiç sesimi çıkarmazdım.",
+            "Yeşil ve siyah zeytinin ayrı ağaçlarda yetiştiğini sanırdım. Bulmacalardaki, 'Annenin erkek kardeşi' kısmına dayımın beş harfli ismini sığdırmaya çalışırdım.",
+            "Anaokulunda patates baskısı yapmayı öğrenmiştik. O kadar hoşuma gitmişti ki, evde duvarlara, masa örtülerine filan basmıştım. Ancak sanat merakım annemin yeni aldığı beyaz eteğe patatesi yapıştırmamla son bulmuştu. Hem gönlünü almak hem de el koyduğu patateslere kavuşmak için dahiyane bir fikirle öğretmenimin yanına gittim. 'Annem' yazısını patatese oydurttum. Sevinçle eve gelerek soyundum. Renkli boyalara batırdığım patatesi vücudumun her tarafına bastım. Sonra da annemin karşısına geçtim. Beni o halde görünce ağlamaya başlamıştı.",
+            "Madonna ile Maradona'yı kardeş zannederdim. Kendi kendime, 'Bunların babası ne şanslı be. Bir çocuğu futbolun kralı, biri müziğin kraliçesi' derdim.",
+            "Birinden özür dilediğim zaman Allah'ın bana bir özür vereceğini sanırdım. Sakat olacağımı düşünüp hemen 'dilediğim özrü' geri alırdım.",
+            "Kurban Bayramı'nda toplanan derilerden uçak yapıldığını sanırdım. Uçakların dış yüzeyinin bu derilerle kaplandığı için Türk Hava Kurumu'nun topladığını düşünüyordum. Uçak kaçırma filmlerinde silahla ateş edildiğinde ya da bomba patladığında, 'Ayyy! Deri deldi!' derdim.",
+            "'Gil' diye konuşanları fakir zannederdim.",
+            "Annem banyodan çıktıktan sonra babamın söylediği, 'Sıhhatler olsun' lafını 'Saatler olsun' diye anlardım. Bunun da, 'Banyoda amma çok kaldın' gibi bir şey demek olduğunu sanıp babamın anneme kızdığını düşünürdüm. Annemin buna karşılık niye sadece, 'Sağol' dediğini merak ederdim. 'Ne kibar kadın,' derdim."
+        ];
+
+        var randomIndex = Math.floor(Math.random() * anecdotes.length);
+        var selectedAnecdote = anecdotes[randomIndex];
+        var anecdoteContainer = document.getElementById("anecdoteContainer");
+        anecdoteContainer.innerHTML += '<div class="anecdote"><p>' + selectedAnecdote + '</p></div>';
+    </script>
+</body>
+</html>
