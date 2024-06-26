@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cem Yılmaz - Anecdotes</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'SF Pro Display', sans-serif;
+            background-color: #ededed;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            padding-top: 20px;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Anecdote Styles */
+        .anecdote {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .anecdote p {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Writer Styles */
+        .writer {
+            text-align: right;
+            font-style: italic;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px 0;
+        }
+        .footer a {
+            color: #888;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons Styles */
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buttons button {
+            background-color: #007bff;
+            color: #ededed;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 0 5px;
+            border-radius: 5px;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #202124;
+            color: #000;
+        }
+        .container.dark-mode {
+            background-color: #000;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+        .footer.dark-mode {
+            background-color: #ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <h1>Cem Yılmaz - Anecdotes</h1>
+        <div id="anecdoteContainer"></div>
+        <div class="writer">- Cem Yılmaz</div>
+        <div class="buttons">
+            <button onclick="previousAnecdote()">Previous</button>
+            <button onclick="nextAnecdote()">Next</button>
+            <button onclick="randomAnecdote()">Random</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p class="languages">Languages: <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('tr')">Turkish</a></p>
+        <p class="theme">Theme: <a href="#" onclick="switchTheme('light')">Light</a> | <a href="#" onclick="switchTheme('dark')">Dark</a></p>
+    </div>
+
+    <script>
+        var anecdotes = [];
+        var currentIndex = -1;
+
+        function fetchAnecdotes() {
+            fetch('quotes.txt')
+                .then(response => response.text())
+                .then(data => {
+                    anecdotes = data.split('\n').filter(anecdote => anecdote.trim() !== '');
+                    showNextAnecdote();
+                })
+                .catch(error => {
+                    console.error('Error fetching quotes:', error);
+                });
+        }
+
+        function showNextAnecdote() {
+            if (anecdotes.length === 0) return;
+            currentIndex = (currentIndex + 1) % anecdotes.length;
+            displayAnecdote(currentIndex);
+        }
+
+        function showPreviousAnecdote() {
+            if (anecdotes.length === 0) return;
+            currentIndex = (currentIndex - 1 + anecdotes.length) % anecdotes.length;
+            displayAnecdote(currentIndex);
+        }
+
+        function showRandomAnecdote() {
+            if (anecdotes.length === 0) return;
+            currentIndex = Math.floor(Math.random() * anecdotes.length);
+            displayAnecdote(currentIndex);
+        }
+
+        function displayAnecdote(index) {
+            var anecdoteContainer = document.getElementById("anecdoteContainer");
+            anecdoteContainer.innerHTML = '<div class="anecdote"><p>' + anecdotes[index] + '</p></div>';
+        }
+
+        function switchLanguage(language) {
+            var lang = language.toLowerCase();
+            var langTag = (lang === 'en') ? 'en' : 'tr';
+            document.documentElement.lang = langTag;
+
+            if (lang === 'en') {
+                document.title = 'Cem Yılmaz - Anecdotes';
+                document.querySelector('h1').textContent = 'Cem Yılmaz - Anecdotes';
+                document.querySelector('.writer').textContent = '- Cem Yılmaz';
+                document.querySelector('.languages').innerHTML = 'Languages: <a href="#" onclick="switchLanguage(\'en\')">English</a> | <a href="#" onclick="switchLanguage(\'tr\')">Turkish</a>';
+                document.querySelector('.theme').innerHTML = 'Theme: <a href="#" onclick="switchTheme(\'light\')">Light</a> | <a href="#" onclick="switchTheme(\'dark\')">Dark</a>';
+            } else {
+                document.title = 'Cem Yılmaz - Anılar';
+                document.querySelector('h1').textContent = 'Cem Yılmaz - Anılar';
+                document.querySelector('.writer').textContent = '- Cem Yılmaz';
+                document.querySelector('.languages').innerHTML = 'Diller: <a href="#" onclick="switchLanguage(\'en\')">English</a> | <a href="#" onclick="switchLanguage(\'tr\')">Türkçe</a>';
+                document.querySelector('.theme').innerHTML = 'Tema: <a href="#" onclick="switchTheme(\'light\')">Açık</a> | <a href="#" onclick="switchTheme(\'dark\')">Koyu</a>';
+            }
+        }
+
+        function switchTheme(theme) {
+            const body = document.body;
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+            } else {
+                body.classList.remove('dark-mode');
+            }
+        }
+
+        // Initial setup
+        fetchAnecdotes();
+    </script>
+</body>
+</html>
